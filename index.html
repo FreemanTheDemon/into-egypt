@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Into Egypt</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <button onclick="location.href='http://www.example.com'" type="button">
+            Home
+        </button>
+
+        <h1>
+            I N T O&nbsp; &nbsp;E G Y P T
+        </h1>
+
+        <button onclick="location.href='http://www.example.com'" type="button">
+            Info
+        </button>
+    </header>
+
+    <section id="game-box">
+
+        <img src="" alt="game background" id="game-background">
+
+        <div id="game-event"></div>
+
+        <div id="game-start">
+            <input type="text" placeholder="Name Your Pharaoh">
+            <button id="easy-btn">Easy - Pharaoh of Abraham</button>
+            <button id="medium-btn">Medium - Pharaoh of Joseph</button>
+            <button id="hard-btn">Hard - Pharaoh of Moses</button>
+        </div>
+        <div hidden id="game-info">
+            <p id="char-name"></p>
+            <table id="char-stats">
+                <tr>
+                    <td>Age:</td>
+                    <td id="char-age">0</td>
+                </tr>
+                <tr>
+                    <td>Year:</td>
+                    <td id="char-year">0</td>
+                </tr>
+                <tr>
+                    <td>Gold:</td>
+                    <td id="char-gold">0</td>
+                </tr>
+                <tr>
+                    <td>Slaves:</td>
+                    <td id="char-slaves">0</td>
+                </tr>
+                <tr>
+                    <td>Authority:</td>
+                    <td id="char-auth">0</td>
+                </tr>
+                <tr>
+                    <td>Glory</td>
+                    <td id="char-glory">0</td>
+                </tr>
+            </table>
+
+            <!-- put some buttons here to manage things during each year -->
+        </div>
+
+        <div id="game-foot">
+            <p id="game-text">
+                Begin your reign...
+            </p>
+            <button id="game-next">
+                End Year
+            </button>
+        </div>
+    </section>
+
+    <footer>
+        <p>Made by: Freeman</p>
+    </footer>
+
+    <script src="index.js"></script> 
+</body>
+</html>
