@@ -6,48 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Into Egypt</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="//db.onlinewebfonts.com/c/e90bad7eca8a7239a1e12c72a9868723?family=1651AlchemyW00-Normal" rel="stylesheet" type="text/css"/> 
 </head>
 <body>
     <header>
-        <button onclick="location.href='http://www.example.com'" type="button">
-            Home
-        </button>
+        <nav>
+            <button class="nav-btn" id="home-btn" onclick="location.href='http://www.example.com'" type="button">
+                Home
+            </button>
 
-        <h1>
-            I N T O&nbsp; &nbsp;E G Y P T
-        </h1>
+            <a href="http://www.example.com'"><h1>
+                <!-- make this a link to the home page -->
+                I N T O&nbsp; ☥ &nbsp;E G Y P T
+            </h1></a>
 
-        <button onclick="location.href='http://www.example.com'" type="button">
-            Info
-        </button>
+            <button class="nav-btn" id="info-btn" onclick="location.href='http://www.example.com'" type="button">
+                Info
+            </button>
+        </nav>
     </header>
 
     <section id="game-box">
 
-        <img src="" alt="game background" id="game-background">
+        <!-- <img src="./resources/base.png" alt="game background" id="game-background"> -->
 
         <div id="game-event"></div>
 
         <div id="game-start">
             <input type="text" placeholder="Name Your Pharaoh">
-            <button id="easy-btn">Easy - Pharaoh of Abraham</button>
-            <button id="medium-btn">Medium - Pharaoh of Joseph</button>
-            <button id="hard-btn">Hard - Pharaoh of Moses</button>
+            <button class="diff-btn" id="easy-btn">Easy - Pharaoh of Abraham</button>
+            <button class="diff-btn" id="medium-btn">Medium - Pharaoh of Joseph</button>
+            <button class="diff-btn" id="hard-btn">Hard - Pharaoh of Moses</button>
         </div>
-        <div hidden id="game-info">
-            <p id="char-name"></p>
+        <div id="game-info">
+            <img id="char-picture" src="./resources/char_pic.png" alt="character portrait">
+            <p id="char-name">Ramses II</p>
             <table id="char-stats">
                 <tr>
-                    <td>Age:</td>
-                    <td id="char-age">0</td>
-                </tr>
-                <tr>
-                    <td>Year:</td>
-                    <td id="char-year">0</td>
+                    <td>Turn:</td>
+                    <td id="char-turn">0</td>
                 </tr>
                 <tr>
                     <td>Gold:</td>
                     <td id="char-gold">0</td>
+                </tr>
+                <tr>
+                    <td>Soldiers:</td>
+                    <td id="char-soldiers">0</td>
                 </tr>
                 <tr>
                     <td>Slaves:</td>
@@ -58,26 +63,47 @@
                     <td id="char-auth">0</td>
                 </tr>
                 <tr>
-                    <td>Glory</td>
+                    <td>Glory:</td>
                     <td id="char-glory">0</td>
                 </tr>
             </table>
 
             <!-- put some buttons here to manage things during each year -->
+            <div id="game-actions">
+                <button class="minor-btn" id="game-fight">
+                    Fight Neighbors
+                </button>
+                <button class="minor-btn" id="game-build">
+                    Build Wonders
+                </button>
+                <button class="minor-btn" id="game-manage">
+                    Manage Nation
+                </button>
+            </div>
         </div>
 
         <div id="game-foot">
-            <p id="game-text">
-                Begin your reign...
-            </p>
-            <button id="game-next">
-                End Year
+            <div id="game-text-container">
+                <p id="game-text">
+                    Begin your reign...
+                </p>
+            </div>
+            <div id="game-important">
+                <button class="big-btn" id="game-next">
+                    End Turn
+                </button>
+                <button class="big-btn" id="game-save">
+                    Save Game
+                </button>
+                <button class="big-btn" id="game-load">
+                    Load Game
             </button>
+            </div>
         </div>
     </section>
 
     <footer>
-        <p>Made by: Freeman</p>
+        <p id="made-by">Made by: Freeman</p>
     </footer>
 
     <script src="index.js"></script> 
