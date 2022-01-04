@@ -22,39 +22,26 @@ module.exports = {
 
             CREATE TABLE rand_events (
                 event_id SERIAL PRIMARY KEY,
+                title VARCHAR,
                 img_id INTEGER,
                 event_desc VARCHAR,
                 option_1 VARCHAR,
                 option_2 VARCHAR,
                 gold_1 INTEGER,
+                soldiers_1 INTEGER,
                 slaves_1 INTEGER,
                 auth_1 INTEGER,
                 glory_1 INTEGER,
                 gold_2 INTEGER,
+                soldiers_2 INTEGER,
                 slaves_2 INTEGER,
                 auth_2 INTEGER,
-                glory_2 INTEGER,
+                glory_2 INTEGER
             );
 
-            CREATE TABLE easy_events (
+            CREATE TABLE scripted_events (
                 event_id SERIAL PRIMARY KEY,
-                img_id INTEGER,
-                turn INTEGER,
-                event_desc VARCHAR,
-                option_1 VARCHAR,
-                option_2 VARCHAR,
-                gold_1 INTEGER,
-                slaves_1 INTEGER,
-                auth_1 INTEGER,
-                glory_1 INTEGER,
-                gold_2 INTEGER,
-                slaves_2 INTEGER,
-                auth_2 INTEGER,
-                glory_2 INTEGER,
-            );
-
-            CREATE TABLE medium_events (
-                event_id SERIAL PRIMARY KEY,
+                title VARCHAR,
                 img_id INTEGER,
                 turn INTEGER,
                 event_desc VARCHAR,
@@ -69,26 +56,7 @@ module.exports = {
                 soldiers_2 INTEGER,
                 slaves_2 INTEGER,
                 auth_2 INTEGER,
-                glory_2 INTEGER,
-            );
-
-            CREATE TABLE hard_events (
-                event_id SERIAL PRIMARY KEY,
-                img_id INTEGER,
-                turn INTEGER,
-                event_desc VARCHAR,
-                option_1 VARCHAR,
-                option_2 VARCHAR,
-                gold_1 INTEGER,
-                soldiers_1 INTEGER,
-                slaves_1 INTEGER,
-                auth_1 INTEGER,
-                glory_1 INTEGER,
-                gold_2 INTEGER,
-                soldiers_2 INTEGER,
-                slaves_2 INTEGER,
-                auth_2 INTEGER,
-                glory_2 INTEGER,
+                glory_2 INTEGER
             );
 
             CREATE TABLE users (
@@ -100,25 +68,17 @@ module.exports = {
                 soldiers, INTEGER,
                 slaves INTEGER,
                 auth INTEGER,
-                glory INTEGER
+                glory INTEGER,
+                hasFoughtBattle BOOLEAN,
+                hasReadOracle BOOLEAN
             );
 
-            INSERT INTO rand_events (event_desc, img_id, option_1, option_2, gold_1, soldiers_1, slaves_1, auth_1, glory_1, gold_2, soldiers_2, slaves_2, auth_2, glory_2)
+            INSERT INTO rand_events (title, event_desc, img_id, option_1, option_2, gold_1, soldiers_1, slaves_1, auth_1, glory_1, gold_2, soldiers_2, slaves_2, auth_2, glory_2)
             VALUES
             ('example desc Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea nam quas dicta minima a voluptatem doloremque cum earum nisi dignissimos.',
             1, 'first opt', 'second opt', -3, 12, 3, -30, 0, -300, 12, 300, -50, 1000);
 
-            INSERT INTO easy_events (event_desc, img_id, turn, option_1, option_2, gold_1, soldiers_1, slaves_1, auth_1, glory_1, gold_2, soldiers_2, slaves_2, auth_2, glory_2)
-            VALUES
-            ('example desc Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea nam quas dicta minima a voluptatem doloremque cum earum nisi dignissimos.',
-            1, 'first opt', 'second opt', -3, 12, 3, -30, 0, -300, 12, 300, -50, 1000);
-
-            INSERT INTO medium_events (event_desc, img_id, turn, option_1, option_2, gold_1, soldiers_1, slaves_1, auth_1, glory_1, gold_2, soldiers_2, slaves_2, auth_2, glory_2)
-            VALUES
-            ('example desc Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea nam quas dicta minima a voluptatem doloremque cum earum nisi dignissimos.',
-            1, 'first opt', 'second opt', -3, 12, 3, -30, 0, -300, 12, 300, -50, 1000);
-
-            INSERT INTO hard_events (event_desc, img_id, turn, option_1, option_2, gold_1, soldiers_1, slaves_1, auth_1, glory_1, gold_2, soldiers_2, slaves_2, auth_2, glory_2)
+            INSERT INTO scripted_events (title, event_desc, img_id, turn, title, option_1, option_2, gold_1, soldiers_1, slaves_1, auth_1, glory_1, gold_2, soldiers_2, slaves_2, auth_2, glory_2)
             VALUES
             ('example desc Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea nam quas dicta minima a voluptatem doloremque cum earum nisi dignissimos.',
             1, 'first opt', 'second opt', -3, 12, 3, -30, 0, -300, 12, 300, -50, 1000);
@@ -132,3 +92,17 @@ module.exports = {
         }).catch(err => console.log('error seeding DB', err))
     }
 }
+
+
+/*
+ INSERT INTO rand_events (event_desc, img_id, option_1, option_2, gold_1, soldiers_1, slaves_1, auth_1, glory_1, gold_2, soldiers_2, slaves_2, auth_2, glory_2)
+            VALUES
+            ('A sorcerer offers his services!', 1, 'Welcome Him', 'Kill Him', -20, 0, 0, -5, 100, 0, 0, 0, 5, 0);
+
+            gold: number, generally always have some in the hundreds
+            soldiers: increment/decrement by 100
+            slaves: increment/decrement by 1000
+            authority: max is 100, anything less than 0 is game over
+            glory: points - more points mean a better ending
+
+*/

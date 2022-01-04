@@ -144,9 +144,9 @@ footer {
 }
 
 #game-text {
-    padding-top: 10px;
+    padding-top: 5px;
     padding-left: 10px;
-    font-size: 24px;
+    font-size: 22px;
 }
 
 #game-start {
@@ -245,7 +245,7 @@ td {
 }
 
 #game-text-container {
-    width: 700px;
+    width: 750px;
 }
 
 .diff-btn {
