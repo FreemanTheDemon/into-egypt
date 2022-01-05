@@ -47,10 +47,6 @@ table {
 	border-spacing: 0;
 }
 
-@import url(//db.onlinewebfonts.com/c/e90bad7eca8a7239a1e12c72a9868723?family=1651AlchemyW00-Normal);
-
-@font-face {font-family: "1651AlchemyW00-Normal"; src: url("//db.onlinewebfonts.com/t/e90bad7eca8a7239a1e12c72a9868723.eot"); src: url("//db.onlinewebfonts.com/t/e90bad7eca8a7239a1e12c72a9868723.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/e90bad7eca8a7239a1e12c72a9868723.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/e90bad7eca8a7239a1e12c72a9868723.woff") format("woff"), url("//db.onlinewebfonts.com/t/e90bad7eca8a7239a1e12c72a9868723.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/e90bad7eca8a7239a1e12c72a9868723.svg#1651AlchemyW00-Normal") format("svg"); } 
-
 header {
     background-color: #0047AB;
     height: 100px;
@@ -132,6 +128,7 @@ footer {
     border: 2px solid silver;
     box-shadow: 5px 5px rgba(0,0,0,.4);
     background-image: url('./resources/base.png');
+    background-size: 1000px;
 }
 
 #game-foot {
@@ -164,6 +161,7 @@ footer {
 }
 
 #game-info {
+    display: none;
     float: right;
     width: 200px;
     height: 498px;
@@ -181,16 +179,16 @@ footer {
 }
 
 #char-stats {
-    margin-top: 20px;
+    margin-top: 10px;
     align-items: center;
     height: 150px;
 }
 
 #char-name {
-    padding-top: 10px;
+    padding-top: 7px;
+    font-size: 20px;
     text-align: center;
     color: #a50021;
-    font-family: "1651AlchemyW00-Normal";
 }
 
 table {
@@ -232,14 +230,15 @@ td {
 
 .minor-btn {
     width: 200px;
-    height: 33px;
+    height: 25px;
     background-color: #cc3300;
     color: #fecc33;
-    font-size: 20px;
+    font-size: 16px;
     border-color: burlywood;
 }
 
 #game-next {
+    display: none;
     height: 34px;
     background-color: #339966;
 }
@@ -267,4 +266,47 @@ td {
 #hard-btn {
     background-color: #a50021;
     color: #fecc33
+}
+
+#event {
+    background-color: #66cccc;
+    width: 550px;
+    height: 250px;
+    margin-left: 125px;
+    margin-top: 100px;
+    position: relative;
+    border: 4px solid #fecc33;
+}
+
+#event-desc {
+    margin-top: 40px;
+    margin-left: 50px;
+    font-size: 20px;
+}
+
+#event > h2 {
+    font-size: 36px;
+    text-align: center;
+    padding-top: 10px;
+}
+
+#event-btn-container {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    width: 550px;
+    justify-content: space-around;
+}
+
+.option-btn {
+    height: 35px;
+    width: 120px;
+    background-color: #0047AB;
+    border-color: #a50021;
+    color: #fecc33;
+}
+
+#game-save {
+    display: none;
 }

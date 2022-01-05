@@ -3,14 +3,21 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const {SERVER_PORT} = process.env;
-const {} = require('./controller.js');
+const {seed, getRandom, getScript, getUser, saveUser, deleteUser} = require('./controller.js');
 
 app.use(express.json());
 app.use(cors());
 
-// make server requests here (use controller)
+// seed
+app.post('/seed', seed);
 
-// app.post('/seed', seed);
+// get requests for events
+app.get('/randevent', getRandom);
+app.get('/scriptevent/:id', getScript);
 
+// make requests for users
+app.post('/user', saveUser);
+app.get('/user', getUser);
+app.delete('/user', deleteUser);
 
 app.listen(SERVER_PORT, () => console.log(`Listening on ${SERVER_PORT}`));

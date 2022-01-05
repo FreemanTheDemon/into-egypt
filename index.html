@@ -6,21 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Into Egypt</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="//db.onlinewebfonts.com/c/e90bad7eca8a7239a1e12c72a9868723?family=1651AlchemyW00-Normal" rel="stylesheet" type="text/css"/> 
 </head>
 <body>
     <header>
         <nav>
-            <button class="nav-btn" id="home-btn" onclick="location.href='http://www.example.com'" type="button">
+            <button class="nav-btn" id="home-btn" onclick="location.href='./index.html'" type="button">
                 Home
             </button>
 
-            <a href="http://www.example.com'"><h1>
+            <a href="./index.html"><h1>
                 <!-- make this a link to the home page -->
                 I N T O&nbsp; ☥ &nbsp;E G Y P T
             </h1></a>
 
-            <button class="nav-btn" id="info-btn" onclick="location.href='http://www.example.com'" type="button">
+            <button class="nav-btn" id="info-btn" onclick="location.href='./info.html'" type="button">
                 Info
             </button>
         </nav>
@@ -77,6 +76,9 @@
                 <button class="minor-btn" id="game-manage">
                     Manage Nation
                 </button>
+                <button class="minor-btn" id="game-oracle">
+                    Read Oracle
+                </button>
             </div>
         </div>
 
@@ -93,9 +95,10 @@
                 <button class="big-btn" id="game-save">
                     Save Game
                 </button>
+                <input id="insert-character" type="text" placeholder="Character to Load">
                 <button class="big-btn" id="game-load">
                     Load Game
-            </button>
+                </button>
             </div>
         </div>
     </section>
@@ -104,6 +107,7 @@
         <p id="made-by">Made by: Freeman</p>
     </footer>
 
-    <script src="index.js"></script> 
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
