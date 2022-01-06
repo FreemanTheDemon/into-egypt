@@ -29,6 +29,19 @@ let userPower;
 let enemyPower;
 let fightBtn;
 let runBtn;
+let randArmy;
+
+let armySize;
+let buildArmy;
+let exitArmy;
+
+let buildTemple;
+let buildPyramid;
+let buildCanal;
+let exitBuild;
+let temple;
+let pyramid;
+let canal;
 
 const gameFight = document.querySelector('#game-fight');
 const gameBuild = document.querySelector('#game-build');
@@ -53,9 +66,9 @@ let playerData = {
     name: '',
     profilePic: 1,
     turn: 0,
-    gold: 100,
+    gold: 200,
     soldiers: 1000,
-    slaves: 10000, 
+    slaves: 20000, 
     authority: 100,
     glory: 0,
     enemySize: 1000,
@@ -71,7 +84,7 @@ let eventOnScreen = false;
 let gameOver = false;
 
 const conan1 = new Audio('./resources/conan.mp3');
-
+const startAudio = new Audio('./resources/fanfare.mp3')
 function handleStartBtn(e) {
     let name = insertName.value;
     if (name.length === 0) {
@@ -89,12 +102,15 @@ function handleStartBtn(e) {
         startGame(name);
     } else if (e.target.id === 'easy-btn') {
         playerData.difficulty = 'easy';
+        startAudio.play();
         startGame(name);
     } else if (e.target.id === 'medium-btn') {
         playerData.difficulty = 'medium';
+        startAudio.play();
         startGame(name);
     } else if (e.target.id === 'hard-btn') {
         playerData.difficulty = 'hard';
+        startAudio.play();
         startGame(name);
     }
 }
@@ -161,8 +177,11 @@ function advanceTurn() {
         }
 
         // if gold or authority is zero or below, the game is over and lost
-        if (playerData.gold <= 0) {
+        if (playerData.gold < 0) {
             bankruptEnding();
+        }
+        if (playerData.soldiers < 0) {
+            invasionEnding();
         }
         if (playerData.authority <= 0) {
             collapseEnding();
@@ -188,6 +207,7 @@ function advanceTurn() {
         // canal - generates gold
         if (playerData.hasBuiltCanal) {
             playerData.gold += 50;
+            playerData.slaves += 1000;
         }
 
         // reset battle and oracle
@@ -401,6 +421,7 @@ function getScriptedEvent(eventId) {
 
 function readOracle() {
     if (!playerData.hasReadOracle && !eventOnScreen) {
+        gameBox.style.backgroundImage = "url('./resources/oracle_background.png')";
         eventOnScreen = true;
         playerData.hasReadOracle = true;
         let oracleMenuTemplate = `
@@ -420,8 +441,11 @@ function readOracle() {
     }
 }
 
+const tarotSound = new Audio('./resources/discovery.mp3');
 function drawCard() {
     tarotBtn.style.display = 'none';
+    tarotSound.currentTime = 0;
+    tarotSound.play();
     let rand = Math.floor(Math.random() * (22));
     tarotCard.src = './resources/tarot/' + rand + '.png';
 
@@ -517,6 +541,7 @@ function drawCard() {
     
     setTimeout(() => {
         eventOnScreen = false;
+        gameBox.style.backgroundImage = "url('./resources/base.png')";
         removeMenu('oracle');
     }, 3500);
 }
@@ -524,19 +549,19 @@ function drawCard() {
 function fightBattle() {
     if (!playerData.hasFoughtBattle && !eventOnScreen) {
         eventOnScreen = true;
-        playerData.hasReadOracle = true;
-        let randArmy = Math.floor(Math.random() * (50 - 5 + 1) + 5) * 100
+        playerData.hasFoughtBattle = true;
+        randArmy = Math.floor(Math.random() * (50 - 5 + 1) + 5) * 100
         let battleMenuTemplate = `
         <div id="battle">
             <div id="army-1">
                 <p id="user-army">Soldiers: ${playerData.soldiers}</p>
-                <p id="user-power">Power: </p>
-                <img id="dice-1" src="">
+                <p class="power" id="user-power">Power: </p>
+                <img class="dice" id="dice-1" src="">
             </div>
             <div id="army-2">
                 <p id="enemy-army">Soldiers: ${randArmy}</p>
-                <p id="enemy-power">Power: </p>
-                <img id="dice-2" src="">
+                <p class="power" id="enemy-power">Power: </p>
+                <img class="dice" id="dice-2" src="">
             </div>
             <div id="event-btn-container">
                 <button id="fight-btn" class="option-btn">Fight Battle!</button>
@@ -545,6 +570,7 @@ function fightBattle() {
         </div>
         `
         gameEvent.innerHTML += battleMenuTemplate;
+        gameBox.style.backgroundImage = "url('./resources/battle_background.png')";
         firstDice = document.querySelector('#dice-1');
         secondDice = document.querySelector('#dice-2');
         userPower = document.querySelector('#user-power');
@@ -560,18 +586,219 @@ function fightBattle() {
     }
 }
 
+const over9000 = new Audio('./resources/over_9000.mp3');
+const battleAudio = new Audio('./resources/battle.mp3');
 function fight() {
+    runBtn.style.display = 'none';
+    fightBtn.style.display = 'none';
+    let rand1 = Math.floor(Math.random() * (6 - 1 + 1) + 1);
+    let rand2 = Math.floor(Math.random() * (6 - 1 + 1) + 1);
+    firstDice.src = './resources/dice/' + rand1 + '.png';
+    secondDice.src = './resources/dice/' + rand2 + '.png';
 
+    userPower.textContent += rand1 * playerData.soldiers;
+    enemyPower.textContent += rand2 * randArmy;
+
+    if (((rand1 * playerData.soldiers)) > 9000 || ((rand2 * randArmy) > 9000)) {
+        over9000.currentTime = 0;
+        over9000.play();
+    } else {
+        battleAudio.currentTime = 0;
+        battleAudio.play();
+    }
+
+    if ((rand1 * playerData.soldiers) >= (rand2 * randArmy)) {
+        // victory
+        let slavesGained = Math.round(((randArmy / 4) * 10) / 1000) * 1000;
+        let gloryGained = randArmy / 10;
+        let soldiersLost = Math.round((randArmy / 4) / 100) * 100;
+        playerData.slaves += slavesGained;
+        playerData.glory += gloryGained;
+        playerData.soldiers -= soldiersLost
+        gameText.textContent = 'Hail the victor! You gained ' + slavesGained + ' slaves and ' + gloryGained + ' glory! ' + soldiersLost + ' soldiers were lost in this encounter.'
+    } else {
+        // loss
+        let soldiersLost = (randArmy / 2) + 500;
+        playerData.soldiers -= soldiersLost;
+        playerData.glory -= 300;
+        playerData.authority -= 10;
+        gameText.textContent = 'Death befalls your soldiers! You lost ' + soldiersLost + ' soldiers, ' + 10 + ' authority and ' + 300 + ' glory!'
+    }
+
+    setStats();
+
+    setTimeout(() => {
+        eventOnScreen = false;
+        gameBox.style.backgroundImage = "url('./resources/base.png')";
+        removeMenu('battle');
+    }, 4000);
 }
 
 const runSound = new Audio('./resources/run_away.mp3');
 function runAway() {
     runSound.currentTime = 0;
     runSound.play();
+    eventOnScreen = false;
+    playerData.soldiers -= 100;
+    setStats();
+    gameBox.style.backgroundImage = "url('./resources/base.png')";
     removeMenu('battle');
     gameText.textContent = 'Run away!'
 }
 
+function manageArmy() {
+    if (!eventOnScreen) {
+        eventOnScreen = true;
+        let armyMenuTemplate = `
+        <div id="army">
+            <h2>Spend 20 gold for 100 soldiers?</h2>
+            <p id="army-size">Army size: ${playerData.soldiers}</p>
+            <div id="event-btn-container">
+                <button id="build-army" class="option-btn">Recriut</button>
+                <button id="exit-army" class="option-btn">Exit Menu</button>
+            </div>
+        </div>
+        `
+        gameEvent.innerHTML += armyMenuTemplate;
+        // gameBox.style.backgroundImage = "url('./resources/battle_background.png')";
+        armySize = document.querySelector('#army-size');
+        buildArmy = document.querySelector('#build-army');
+        exitArmy = document.querySelector('#exit-army');
+        buildArmy.addEventListener('click', recruit);
+        exitArmy.addEventListener('click', exitArmyMenu);
+    } else {
+        gameText.textContent = 'Only one menu at a time!';
+    }
+}
+
+function recruit() {
+    if (playerData.gold >= 20) {
+        playerData.gold -= 20
+        playerData.soldiers += 100;
+        setStats();
+        armySize.textContent = `Army size: ${playerData.soldiers}`
+    } else {
+        gameText.textContent = 'Not enough funds!';
+    }
+}
+
+function exitArmyMenu() {
+    eventOnScreen = false;
+    gameBox.style.backgroundImage = "url('./resources/base.png')";
+    removeMenu('army');
+}
+
+function buildWonders() {
+    if (!eventOnScreen) {
+        eventOnScreen = true;
+        let buildMenuTemplate = `
+        <div id="wonders">
+            <h2>Build a Wonder!</h2>
+            <div id="wonder-container">
+                <div>
+                    <img id="temple" class="building" src="./resources/luxor.png">
+                    <p>Temple of Luxor</p>
+                    <p>Costs 10000 slaves and 200 gold</p>
+                    <p>Generates 1 authority per turn</p>
+                    <button id="build-temple" class="option-btn">Build</button>
+                </div>
+                <div>
+                    <img id="pyarmid" class="building" src="./resources/pyramid.png">
+                    <p>Great Pyramid</p>
+                    <p>Costs 20000 slaves and 400 gold</p>
+                    <p>Generates 100 glory per turn</p>
+                    <button id="build-pyramid" class="option-btn">Build</button>
+                </div>
+                <div>
+                    <img id="canal" class="building" src="./resources/canal.png">
+                    <p>Canal of the Pharaohs</p>
+                    <p>Costs 30000 slaves and 600 gold</p>
+                    <p>Generates 50 gold and 1000 slaves per turn</p>
+                    <button id="build-canal" class="option-btn">Build</button>
+                </div>
+            </div>
+            <button id="exit-build" class="option-btn">Exit</button>
+        </div>
+        `
+        gameEvent.innerHTML += buildMenuTemplate;
+        // gameBox.style.backgroundImage = "url('./resources/battle_background.png')";
+
+        buildTemple = document.querySelector('#build-temple');
+        buildPyramid = document.querySelector('#build-pyramid');
+        buildCanal = document.querySelector('#build-canal');
+        exitBuild = document.querySelector('#exit-build');
+        temple = document.querySelector('#temple');
+        pyramid = document.querySelector('#pyramid');
+        canal = document.querySelector('#canal');
+        buildTemple.addEventListener('click', buildTempleHandler);
+        buildPyramid.addEventListener('click', buildPyramidHandler);
+        buildCanal.addEventListener('click', buildCanalHandler);
+        exitBuild.addEventListener('click', exitBuildMenu);
+
+        if (playerData.hasBuiltPyramid) {
+            pyramid.style.filter = 'grayscale(100%)';
+        }
+        if (playerData.hasBuiltTemple) {
+            temple.style.filter = 'grayscale(100%)';
+        }
+        if (playerData.hasBuiltCanal) {
+            canal.style.filter = 'grayscale(100%)';
+        }
+    } else {
+        gameText.textContent = 'Only one menu at a time!';
+    }
+}
+
+function exitBuildMenu() {
+    eventOnScreen = false;
+    gameBox.style.backgroundImage = "url('./resources/base.png')";
+    removeMenu('wonders');
+}
+
+function buildTempleHandler() {
+    if (!playerData.hasBuiltTemple && playerData.slaves >= 10000 && playerData.gold >= 200) {
+        playerData.hasBuiltTemple = true;
+        playerData.slaves -= 10000;
+        playerData.gold -= 200;
+        setStats();
+        temple.style.filter = 'grayscale(100%)';
+        gameText.textContent = 'You\'ve built the Temple of Luxor!'
+    } else if (playerData.hasBuiltTemple) {
+        gameText.textContent = 'You\'ve already built the temple!'
+    } else {
+        gameText.textContent = 'You don\'t have enough funds!'
+    }
+}
+
+function buildPyramidHandler() {
+    if (!playerData.hasBuiltPyramid && playerData.slaves >= 20000 && playerData.gold >= 400) {
+        playerData.hasBuiltPyramid = true;
+        playerData.slaves -= 10000;
+        playerData.gold -= 200;
+        setStats();
+        pyramid.style.filter = 'grayscale(100%)';
+        gameText.textContent = 'You\'ve built the Great Pyramid!'
+    } else if (playerData.hasBuiltPyramid) {
+        gameText.textContent = 'You\'ve already built the pyramid!'
+    } else {
+        gameText.textContent = 'You don\'t have enough funds!'
+    }
+}
+
+function buildCanalHandler() {
+    if (!playerData.hasBuiltCanal && playerData.slaves >= 30000 && playerData.gold >= 600) {
+        playerData.hasBuiltCanal = true;
+        playerData.slaves -= 30000;
+        playerData.gold -= 600;
+        setStats();
+        canal.style.filter = 'grayscale(100%)';
+        gameText.textContent = 'You\'ve built the Canal of the Pharaohs!'
+    } else if (playerData.hasBuiltCanal) {
+        gameText.textContent = 'You\'ve already built the canal!'
+    } else {
+        gameText.textContent = 'You don\'t have enough funds!'
+    }
+}
 
 function saveGame() {
     // makes a post request to add a name to the database through the server
@@ -658,6 +885,14 @@ function deathEnding() {
     gameIsOver();
 }
 
+function invasionEnding() {
+    gameOver = true;
+    gameText.textContent = 'Egypt has fallen, trampled by its enemies... GAME OVER';
+    setTimeout(() => {
+        gameBox.style.backgroundImage = "url('./resources/endings/end_invasion.png')";
+    }, 200);
+}
+
 function collapseEnding() {
     gameOver = true;
     gameText.textContent = 'Your power crumbles, and so do your dreams... GAME OVER';
@@ -728,40 +963,21 @@ gameSave.addEventListener('click', saveGame);
 gameLoad.addEventListener('click', loadGame);
 
 gameOracle.addEventListener('click', readOracle);
+gameFight.addEventListener('click', fightBattle);
+gameManage.addEventListener('click', manageArmy);
+gameBuild.addEventListener('click', buildWonders);
 
 
 /*
 TO DO:
     HIGH IMPORTANCE
-    - Add tarot oracle feature
-        - Opens a template menu with two buttons
-            - One button draws and displays a card
-            - The other button goes back
     - Add manage nation menu
         - Maybe call it manage army
         - Spend gold to make a bigger army (10 gold/100 soldiers?)
-    - Add battles
-        - Generate random enemy army size every turn
-        - Opens a template menu with two buttons and comments on the size of the enemy army
-            - Run away (play monty python audio)
-            - Fight battle (wait time for suspense) (maybe play warlords battle audio)
-        - Random enemy size between a reasonable range
-        - Computer and player both roll one dice
-        - To determine the winner:
-            - Multiply the army sizes by the dice and compare
-            - The biggest number wins
-        - If the player loses:
-            - Lose soldiers equal to 1/2 the size of the enemy army
-            - Lose glory (probably fixed)
-        - If the player wins:
-            - Lose soldiers equal to 1/8 (maybe 1/4?) the size of the enemy army
-            - Gain slaves equal to half the size of the enemy army multiplied by ten, and then rounded (up/down?) to the nearest thousand
-            - Gain some glory (maybe in proportion to the size of the enemy army)
     - Add building menu
         - Three one-time buildings represented by pictures
         - Change pictures when buildings are built
         - Big cost, long-term reward
-    
     LOW IMPORTANCE
     - Add a profile picture selection option
     - Add music/audio to improve immersion
