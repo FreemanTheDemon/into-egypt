@@ -310,3 +310,21 @@ td {
 #game-save {
     display: none;
 }
+
+#oracle {
+    background-color: #66cccc;
+    width: 200px;
+    height: 340px;
+    margin-left: 300px;
+    margin-top: 50px;
+    position: relative;
+    border: 4px solid #fecc33;
+    text-align: center;
+}
+
+#tarot-card {
+    margin-top: 20px;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto
+}

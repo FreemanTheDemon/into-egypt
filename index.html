@@ -25,83 +25,85 @@
         </nav>
     </header>
 
-    <section id="game-box">
+    <main>
+        <section id="game-box">
 
-        <div id="game-event"></div>
+            <div id="game-event"></div>
 
-        <div id="game-start">
-            <input id="insert-name" type="text" placeholder="Name Your Pharaoh">
-            <button class="diff-btn" id="easy-btn">Easy - Pharaoh of Abraham</button>
-            <button class="diff-btn" id="medium-btn">Medium - Pharaoh of Joseph</button>
-            <button class="diff-btn" id="hard-btn">Hard - Pharaoh of Moses</button>
-        </div>
-        <div id="game-info">
-            <img id="char-picture" src="./resources/char_pic.png" alt="character portrait">
-            <p id="char-name">Ramses II</p>
-            <table id="char-stats">
-                <tr>
-                    <td>Turn:</td>
-                    <td id="char-turn">0</td>
-                </tr>
-                <tr>
-                    <td>Gold:</td>
-                    <td id="char-gold">0</td>
-                </tr>
-                <tr>
-                    <td>Soldiers:</td>
-                    <td id="char-soldiers">0</td>
-                </tr>
-                <tr>
-                    <td>Slaves:</td>
-                    <td id="char-slaves">0</td>
-                </tr>
-                <tr>
-                    <td>Authority:</td>
-                    <td id="char-auth">0</td>
-                </tr>
-                <tr>
-                    <td>Glory:</td>
-                    <td id="char-glory">0</td>
-                </tr>
-            </table>
-
-            <!-- put some buttons here to manage things during each year -->
-            <div id="game-actions">
-                <button class="minor-btn" id="game-fight">
-                    Fight Neighbors
-                </button>
-                <button class="minor-btn" id="game-build">
-                    Build Wonders
-                </button>
-                <button class="minor-btn" id="game-manage">
-                    Manage Nation
-                </button>
-                <button class="minor-btn" id="game-oracle">
-                    Read Oracle
-                </button>
+            <div id="game-start">
+                <input id="insert-name" type="text" placeholder="Name Your Pharaoh">
+                <button class="diff-btn" id="easy-btn">Easy - Pharaoh of Abraham</button>
+                <button class="diff-btn" id="medium-btn">Medium - Pharaoh of Joseph</button>
+                <button class="diff-btn" id="hard-btn">Hard - Pharaoh of Moses</button>
             </div>
-        </div>
+            <div id="game-info">
+                <img id="char-picture" src="./resources/char_pic.png" alt="character portrait">
+                <p id="char-name">Ramses II</p>
+                <table id="char-stats">
+                    <tr>
+                        <td>Turn:</td>
+                        <td id="char-turn">0</td>
+                    </tr>
+                    <tr>
+                        <td>Gold:</td>
+                        <td id="char-gold">0</td>
+                    </tr>
+                    <tr>
+                        <td>Soldiers:</td>
+                        <td id="char-soldiers">0</td>
+                    </tr>
+                    <tr>
+                        <td>Slaves:</td>
+                        <td id="char-slaves">0</td>
+                    </tr>
+                    <tr>
+                        <td>Authority:</td>
+                        <td id="char-auth">0</td>
+                    </tr>
+                    <tr>
+                        <td>Glory:</td>
+                        <td id="char-glory">0</td>
+                    </tr>
+                </table>
 
-        <div id="game-foot">
-            <div id="game-text-container">
-                <p id="game-text">
-                    Begin your reign...
-                </p>
+                <!-- put some buttons here to manage things during each year -->
+                <div id="game-actions">
+                    <button class="minor-btn" id="game-fight">
+                        Fight Neighbors
+                    </button>
+                    <button class="minor-btn" id="game-build">
+                        Build Wonders
+                    </button>
+                    <button class="minor-btn" id="game-manage">
+                        Manage Nation
+                    </button>
+                    <button class="minor-btn" id="game-oracle">
+                        Read Oracle
+                    </button>
+                </div>
             </div>
-            <div id="game-important">
-                <button class="big-btn" id="game-next">
-                    End Turn
-                </button>
-                <button class="big-btn" id="game-save">
-                    Save Game
-                </button>
-                <input id="insert-character" type="text" placeholder="Character to Load">
-                <button class="big-btn" id="game-load">
-                    Load Game
-                </button>
+
+            <div id="game-foot">
+                <div id="game-text-container">
+                    <p id="game-text">
+                        Begin your reign...
+                    </p>
+                </div>
+                <div id="game-important">
+                    <button class="big-btn" id="game-next">
+                        End Turn
+                    </button>
+                    <button class="big-btn" id="game-save">
+                        Save Game
+                    </button>
+                    <input id="insert-character" type="text" placeholder="Character to Load">
+                    <button class="big-btn" id="game-load">
+                        Load Game
+                    </button>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <footer>
         <p id="made-by">Made by: Freeman</p>
