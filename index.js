@@ -66,9 +66,9 @@ let playerData = {
     name: '',
     profilePic: 1,
     turn: 0,
-    gold: 200,
-    soldiers: 1000,
-    slaves: 20000, 
+    gold: 400,
+    soldiers: 3000,
+    slaves: 10000, 
     authority: 100,
     glory: 0,
     enemySize: 1000,
@@ -455,7 +455,11 @@ function drawCard() {
         playerData.slaves -= 1000;
     } else if (rand === 1) {
         gameText.textContent = 'The Magician - Gain 10 authority and Lose 10 gold';
-        playerData.authority += 10;
+        if (playerData.authority + 10 > 100) {
+            playerData.authority = 100;
+        } else {
+            playerData.authority += 10;
+        }
         playerData.gold -= 10;
     } else if (rand === 2) {
         gameText.textContent = 'The High Priestess - Gain 200 glory and Lose 10 gold';
@@ -467,7 +471,11 @@ function drawCard() {
         playerData.glory -= 100;
     } else if (rand === 4) {
         gameText.textContent = 'The Emperor - Gain 10 authority and Lose 200 soldiers';
-        playerData.authority += 10;
+        if (playerData.authority + 10 > 100) {
+            playerData.authority = 100;
+        } else {
+            playerData.authority += 10;
+        }
         playerData.soldiers -= 200;
     } else if (rand === 5) {
         gameText.textContent = 'The Hierophant - Gain 200 glory and Lose 200 soldiers';
@@ -494,7 +502,11 @@ function drawCard() {
         playerData.gold += 100;
     } else if (rand === 11) {
         gameText.textContent = 'Justice - Gain 10 authority and Lose 1000 slaves';
-        playerData.authority += 10;
+        if (playerData.authority + 10 > 100) {
+            playerData.authority = 100;
+        } else {
+            playerData.authority += 10;
+        }
         playerData.slaves -= 1000;
     } else if (rand === 12) {
         gameText.textContent = 'The Hanged Man - Gain 200 glory and Lose 1000 slaves';
@@ -517,7 +529,11 @@ function drawCard() {
         playerData.soldiers -= 200;
     } else if (rand === 17) {
         gameText.textContent = 'The Star - Gain 10 authority and Lose 10 gold';
-        playerData.authority += 10;
+        if (playerData.authority + 10 > 100) {
+            playerData.authority = 100;
+        } else {
+            playerData.authority += 10;
+        }
         playerData.gold -= 10;
     } else if (rand === 18) {
         gameText.textContent = 'The Moon - Gain 500 soldiers and Lose 100 glory';
@@ -891,6 +907,7 @@ function invasionEnding() {
     setTimeout(() => {
         gameBox.style.backgroundImage = "url('./resources/endings/end_invasion.png')";
     }, 200);
+    gameIsOver();
 }
 
 function collapseEnding() {

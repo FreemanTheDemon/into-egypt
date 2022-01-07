@@ -33,7 +33,7 @@ module.exports = {
                 if (dbRes[0].length > 0) {
                     sequelize.query(`
                     UPDATE users
-                        SET difficulty = '${difficulty}', name = '${name}', profile_pic = ${profilePic} turn = ${turn}, gold = ${gold}, soldiers = ${soldiers}, slaves = ${slaves}, auth = ${authority}, glory = ${glory}, enemy_size = ${enemySize}, has_fought_battle = ${hasFoughtBattle}, has_read_oracle = ${hasReadOracle}, has_built_pyramid = ${hasBuiltPyramid}, has_built_temple = ${hasBuiltTemple}, has_built_canal = ${hasBuiltCanal}
+                        SET difficulty = '${difficulty}', name = '${name}', profile_pic = ${profilePic}, turn = ${turn}, gold = ${gold}, soldiers = ${soldiers}, slaves = ${slaves}, auth = ${authority}, glory = ${glory}, enemy_size = ${enemySize}, has_fought_battle = ${hasFoughtBattle}, has_read_oracle = ${hasReadOracle}, has_built_pyramid = ${hasBuiltPyramid}, has_built_temple = ${hasBuiltTemple}, has_built_canal = ${hasBuiltCanal}
                         WHERE users.name = '${name}';
                     `)
                     .then(dbRes1 => res.status(200).send(dbRes1[0]))
