@@ -21,3 +21,9 @@ app.get('/user', getUser);
 app.delete('/user', deleteUser);
 
 app.listen(SERVER_PORT, () => console.log(`Listening on ${SERVER_PORT}`));
+
+
+// axios request comes in from react ->
+    // send the request to the server (app.post(url, function to trigger))
+        // function itself
+            // query INSERT INTO [table name] ([columns to add to]) VALUES ([values that correspond to the columns])
