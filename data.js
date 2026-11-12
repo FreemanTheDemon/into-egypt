@@ -97,7 +97,7 @@ const WONDERS = {
         image: './resources/canal.png',
         cost: { slaves: 30000, gold: 600 },
         perTurn: { gold: 50, slaves: 1000 },
-        perTurnText: '50 gold and 1000 slaves',
+        perTurnText: '50 gold and 1,000 slaves',
     },
 };
 
@@ -123,21 +123,21 @@ const ENDINGS = {
         image: './resources/endings/end_boring.png',
     },
     glory: {
-        text: 'Eternal victory! You\'ll be remembered for generations to come!... GAME OVER',
+        text: 'Eternal victory! You\'ll be remembered for generations to come... GAME OVER',
         image: './resources/endings/end_glory.png',
     },
 };
 
 const RANDOM_EVENTS = [
     {
-        description: "Our merchants bring great wealth to Khmet!",
+        description: "Our merchants bring great wealth to Kemet!",
         image: 1,
         options: [
             { label: "GOLD!", effects: { gold: 100 } },
         ],
     },
     {
-        description: "Our priests have made word known of the great times to come!",
+        description: "Our priests proclaim that great times are to come!",
         image: 2,
         options: [
             { label: "Glorious!", effects: { authority: 5, glory: 100 } },
@@ -151,7 +151,7 @@ const RANDOM_EVENTS = [
         ],
     },
     {
-        description: "A slave merchant offers to sell you 5000 slaves for 50 gold!",
+        description: "A slave merchant offers to sell you 5,000 slaves for 50 gold!",
         image: 4,
         options: [
             { label: "Buy", effects: { gold: -50, slaves: 5000 } },
@@ -159,18 +159,18 @@ const RANDOM_EVENTS = [
         ],
     },
     {
-        description: "The priests say that it is about time for a sacrifice. It would cost the nation 50 gold.",
+        description: "The priests say it is time for a sacrifice. It would cost the nation 50 gold.",
         image: 5,
         options: [
             { label: "Sacrifice", effects: { gold: -50, authority: 10, glory: 100 } },
-            { label: "Not now", effects: {} },
+            { label: "Not Now", effects: {} },
         ],
     },
     {
-        description: "A band of 500 mercenaries offer their services in exchange for a large one-time payment of 50 gold.",
+        description: "A band of 500 mercenaries offers its services in exchange for a large one-time payment of 50 gold.",
         image: 6,
         options: [
-            { label: "Hire them", effects: { gold: -50, soldiers: 500 } },
+            { label: "Hire Them", effects: { gold: -50, soldiers: 500 } },
             { label: "Decline", effects: {} },
         ],
     },
@@ -178,8 +178,8 @@ const RANDOM_EVENTS = [
         description: "A distant wealthy family member has died without a will! What shall we do with his wealth?",
         image: 7,
         options: [
-            { label: "Seize assets", effects: { gold: 50 } },
-            { label: "Bury him", effects: { authority: 5, glory: 100 } },
+            { label: "Seize Assets", effects: { gold: 50 } },
+            { label: "Bury Him", effects: { authority: 5, glory: 100 } },
         ],
     },
     {
@@ -197,10 +197,10 @@ const RANDOM_EVENTS = [
         ],
     },
     {
-        description: "A madman has preached of the end times, and people are listening!",
+        description: "A madman preaches of the end times, and the people are listening!",
         image: 2,
         options: [
-            { label: "Stop him!", effects: { authority: -5, glory: -100 } },
+            { label: "Stop Him!", effects: { authority: -5, glory: -100 } },
         ],
     },
 ];
@@ -214,10 +214,10 @@ const SCRIPTED_EVENTS = {
         ],
     },
     2: {
-        description: "A plague has befallen upon Egypt! The priests have discovered that Sarai is the wife of Abram and say that she must be given back to end the plagues!",
+        description: "A plague has befallen Egypt! The priests have discovered that Sarai is the wife of Abram and say that she must be given back to end the plagues!",
         image: 12,
         options: [
-            { label: "Bad luck", effects: { authority: -10 } },
+            { label: "Bad Luck", effects: { authority: -10 } },
         ],
     },
     3: {
@@ -231,7 +231,7 @@ const SCRIPTED_EVENTS = {
         description: "Joseph, once a slave, has interpreted the dreams, which warn of a famine to come! He claims to know how to ease the nation through this famine.",
         image: 14,
         options: [
-            { label: "Make him Vizier", effects: { gold: -10, authority: 10, glory: 100 } },
+            { label: "Make Him Vizier", effects: { gold: -10, authority: 10, glory: 100 } },
         ],
     },
     5: {
@@ -242,7 +242,7 @@ const SCRIPTED_EVENTS = {
         ],
     },
     6: {
-        description: "Moses has become an asset to the nation. He offers to contribute to managing the workforce or leading the army.",
+        description: "Moses has become an asset to the nation. He offers to help manage the workforce or lead the army.",
         image: 16,
         options: [
             { label: "Slaves", effects: { slaves: 3000, authority: 5, glory: 100 } },
@@ -253,11 +253,11 @@ const SCRIPTED_EVENTS = {
         description: "Moses has been found conspiring with the slaves to overthrow the Kingdom of Egypt!",
         image: 17,
         options: [
-            { label: "Exile him!", effects: { authority: -10 } },
+            { label: "Exile Him!", effects: { authority: -10 } },
         ],
     },
     8: {
-        description: "Moses has returned from exile and demands his people freed. He warns of destruction that will come to Egypt if we do not comply.",
+        description: "Moses has returned from exile and demands that his people be freed. He warns of destruction that will come to Egypt if we do not comply.",
         image: 18,
         options: [
             { label: "Never!", effects: { authority: 10 } },
@@ -267,15 +267,15 @@ const SCRIPTED_EVENTS = {
         description: "Plague after plague has overtaken Egypt. We must let the Israelites go!",
         image: 19,
         options: [
-            { label: "Let them go", effects: { gold: -50, soldiers: -200, slaves: -1000, authority: -50, glory: -100 } },
+            { label: "Let Them Go", effects: { gold: -50, soldiers: -200, slaves: -1000, authority: -50, glory: -100 } },
         ],
     },
     10: {
         description: "Moses has taken the camp of Israel through the Red Sea!",
         image: 20,
         options: [
-            { label: "AFTER HIM", effects: { soldiers: -1000, glory: 100 }, isFatal: true },
-            { label: "Good riddance", effects: { slaves: -10000, authority: 10, glory: 500 } },
+            { label: "AFTER HIM!", effects: { soldiers: -1000, glory: 100 }, isFatal: true },
+            { label: "Good Riddance", effects: { slaves: -10000, authority: 10, glory: 500 } },
         ],
     },
 };

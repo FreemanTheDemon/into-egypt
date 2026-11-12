@@ -5,6 +5,7 @@ const BATTLE_BACKGROUND = './resources/battle_background.png';
 const SAVE_KEY_PREFIX = 'into-egypt-save:';
 const MAX_NAME_LENGTH = 21;
 const TYPEWRITER_DELAY_MS = 75;
+const MAX_LOG_ENTRIES = 30;
 const ORACLE_CLOSE_DELAY_MS = 3500;
 const BATTLE_CLOSE_DELAY_MS = 4000;
 const POWER_LEVEL_MEME_THRESHOLD = 9000;
@@ -16,9 +17,11 @@ const $ = selector => document.querySelector(selector);
 
 const elements = {
     gameBox: $('#game-box'),
+    stage: $('#game-stage'),
     startScreen: $('#game-start'),
+    helpButton: $('#help-btn'),
+    helpBackButton: $('#help-back'),
     nameInput: $('#insert-name'),
-    playerInfo: $('#game-info'),
     portrait: $('#char-picture'),
     playerName: $('#char-name'),
     menuArea: $('#game-event'),
@@ -49,7 +52,7 @@ const sounds = {
 let player = null;
 let activeMenu = null;
 let isGameOver = false;
-let typewriterTimer = null;
+let typewriter = null;
 
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -59,36 +62,72 @@ function randomItem(items) {
     return items[randomInt(0, items.length - 1)];
 }
 
+function formatNumber(value) {
+    return value.toLocaleString('en-US');
+}
+
 function playSound(sound) {
     sound.currentTime = 0;
     sound.play();
 }
 
 function setBackground(imagePath) {
-    elements.gameBox.style.backgroundImage = `url('${imagePath}')`;
+    elements.stage.style.backgroundImage = `url('${imagePath}')`;
+}
+
+function addLogEntry(text) {
+    finishTypewriter();
+    const latest = elements.message.firstElementChild;
+    if (latest && latest.textContent === text) {
+        flashEntry(latest);
+        return null;
+    }
+    const entry = document.createElement('li');
+    entry.textContent = text;
+    elements.message.prepend(entry);
+    elements.message.scrollTop = 0;
+    while (elements.message.children.length > MAX_LOG_ENTRIES) {
+        elements.message.lastElementChild.remove();
+    }
+    return entry;
+}
+
+function flashEntry(entry) {
+    entry.animate(
+        [{ backgroundColor: 'rgba(204, 51, 0, 0.25)' }, { backgroundColor: 'transparent' }],
+        { duration: 700, easing: 'ease-out' },
+    );
+}
+
+function clearLog() {
+    finishTypewriter();
+    elements.message.replaceChildren();
 }
 
 function showMessage(text) {
-    stopTypewriter();
-    elements.message.textContent = text;
+    addLogEntry(text);
 }
 
 function typeMessage(text) {
-    stopTypewriter();
+    const entry = addLogEntry(text);
+    if (!entry) return;
     let shownLength = 0;
-    elements.message.textContent = '';
-    typewriterTimer = setInterval(() => {
+    entry.textContent = '';
+    const timer = setInterval(() => {
         shownLength++;
-        elements.message.textContent = text.slice(0, shownLength);
+        entry.textContent = text.slice(0, shownLength);
         if (shownLength >= text.length) {
-            stopTypewriter();
+            finishTypewriter();
         }
     }, TYPEWRITER_DELAY_MS);
+    typewriter = { timer, entry, text };
 }
 
-function stopTypewriter() {
-    clearInterval(typewriterTimer);
-    typewriterTimer = null;
+function finishTypewriter() {
+    if (!typewriter) return;
+    clearInterval(typewriter.timer);
+    typewriter.entry.textContent = typewriter.text;
+    typewriter = null;
 }
 
 function createPlayer(name, difficulty) {
@@ -115,7 +154,7 @@ function applyEffects(effects) {
 
 function renderStats() {
     for (const [stat, element] of Object.entries(elements.stats)) {
-        element.textContent = player[stat];
+        element.textContent = formatNumber(player[stat]);
     }
 }
 
@@ -123,12 +162,12 @@ function describeEffects(effects) {
     const gains = [];
     const losses = [];
     for (const [stat, change] of Object.entries(effects)) {
-        (change > 0 ? gains : losses).push(`${Math.abs(change)} ${stat}`);
+        (change > 0 ? gains : losses).push(`${formatNumber(Math.abs(change))} ${stat}`);
     }
     const parts = [];
     if (gains.length > 0) parts.push(`Gain ${gains.join(' and ')}`);
-    if (losses.length > 0) parts.push(`Lose ${losses.join(' and ')}`);
-    return parts.length === 1 ? `${parts[0]}!` : parts.join(' and ');
+    if (losses.length > 0) parts.push(`${parts.length > 0 ? 'lose' : 'Lose'} ${losses.join(' and ')}`);
+    return `${parts.join(' and ')}!`;
 }
 
 function handleDifficultyClick(event) {
@@ -152,18 +191,25 @@ function handleDifficultyClick(event) {
         typeMessage(config.intro);
     } else {
         playSound(sounds.fanfare);
+        showMessage(`The reign of ${player.name} begins.`);
     }
     advanceTurn();
 }
 
+function showHelp() {
+    elements.startScreen.dataset.view = 'help';
+    elements.helpBackButton.focus();
+}
+
+function hideHelp() {
+    elements.startScreen.dataset.view = 'menu';
+    elements.helpButton.focus();
+}
+
 function showGameScreen() {
     const config = DIFFICULTIES[player.difficulty];
-    elements.startScreen.style.display = 'none';
-    elements.loadInput.style.display = 'none';
-    elements.loadButton.style.display = 'none';
-    elements.playerInfo.style.display = 'block';
-    elements.endTurnButton.style.display = 'block';
-    elements.saveButton.style.display = 'block';
+    elements.gameBox.dataset.screen = 'playing';
+    clearLog();
     elements.playerName.textContent = player.name;
     if (config.portrait) {
         elements.portrait.src = config.portrait;
@@ -178,7 +224,7 @@ function saveKey(name) {
 
 function saveGame() {
     if (isGameOver || activeMenu) {
-        showMessage('Not available!');
+        showMessage('Close the open menu before saving!');
         return;
     }
     try {
@@ -199,7 +245,7 @@ function loadGame() {
         return;
     }
     if (!saved) {
-        showMessage('User not found!');
+        showMessage('No saved reign found for that pharaoh!');
         return;
     }
     player = saved;
@@ -304,20 +350,20 @@ function closeMenu() {
 
 function hideButtons(menu) {
     menu.querySelectorAll('button').forEach(button => {
-        button.style.display = 'none';
+        button.style.visibility = 'hidden';
     });
 }
 
 function openEventMenu(event) {
-    const heading = event.options.length > 1 ? 'Choose Wisely' : 'Fate is outside your hands!';
+    const heading = event.options.length > 1 ? 'Choose Wisely' : 'Fate is out of your hands!';
     const buttons = event.options
         .map((option, index) => `<button class="option-btn" data-option="${index}">${option.label}</button>`)
         .join('');
     const menu = openMenu(`
-        <div id="event">
+        <div class="panel" id="event">
             <h2>${heading}</h2>
-            <p id="event-desc">${event.description}</p>
-            <div id="event-btn-container">${buttons}</div>
+            <p class="panel-text">${event.description}</p>
+            <div class="panel-actions">${buttons}</div>
         </div>
     `, `./resources/events/${event.image}.png`);
 
@@ -344,9 +390,12 @@ function openOracle() {
     player.hasReadOracle = true;
 
     const menu = openMenu(`
-        <div id="oracle">
-            <img id="tarot-card" alt="">
-            <button id="tarot-btn" class="option-btn">Read the signs...</button>
+        <div class="panel" id="oracle">
+            <div id="tarot-slot">
+                <span aria-hidden="true">☥</span>
+                <button id="tarot-btn" class="option-btn">Read the Signs...</button>
+                <img id="tarot-card" alt="">
+            </div>
         </div>
     `, ORACLE_BACKGROUND);
     menu.querySelector('#tarot-btn').addEventListener('click', drawTarotCard);
@@ -360,7 +409,7 @@ function drawTarotCard() {
     const card = TAROT_CARDS[cardIndex];
     activeMenu.querySelector('#tarot-card').src = `./resources/tarot/${cardIndex}.png`;
     applyEffects(card.effects);
-    showMessage(`${card.name} - ${describeEffects(card.effects)}`);
+    showMessage(`${card.name}: ${describeEffects(card.effects)}`);
 
     setTimeout(closeMenu, ORACLE_CLOSE_DELAY_MS);
 }
@@ -375,18 +424,22 @@ function openBattle() {
 
     const enemySoldiers = randomInt(ENEMY_ARMY_MIN / 100, ENEMY_ARMY_MAX / 100) * 100;
     const menu = openMenu(`
-        <div id="battle">
-            <div id="army-1">
-                <p id="user-army">Soldiers: ${player.soldiers}</p>
-                <p class="power" id="user-power">Power: </p>
-                <img class="dice" id="dice-1" alt="">
+        <div class="panel" id="battle">
+            <div id="battle-sides">
+                <div>
+                    <h3>${player.name}</h3>
+                    <p>Soldiers: ${formatNumber(player.soldiers)}</p>
+                    <p class="power" id="user-power">Power: ?</p>
+                    <img class="dice" id="dice-1" alt="">
+                </div>
+                <div>
+                    <h3>The Enemy</h3>
+                    <p>Soldiers: ${formatNumber(enemySoldiers)}</p>
+                    <p class="power" id="enemy-power">Power: ?</p>
+                    <img class="dice" id="dice-2" alt="">
+                </div>
             </div>
-            <div id="army-2">
-                <p id="enemy-army">Soldiers: ${enemySoldiers}</p>
-                <p class="power" id="enemy-power">Power: </p>
-                <img class="dice" id="dice-2" alt="">
-            </div>
-            <div id="event-btn-container">
+            <div class="panel-actions">
                 <button id="fight-btn" class="option-btn">Fight Battle!</button>
                 <button id="run-btn" class="option-btn">RUN AWAY!</button>
             </div>
@@ -406,8 +459,8 @@ function fight(enemySoldiers) {
 
     activeMenu.querySelector('#dice-1').src = `./resources/dice/${playerRoll}.png`;
     activeMenu.querySelector('#dice-2').src = `./resources/dice/${enemyRoll}.png`;
-    activeMenu.querySelector('#user-power').textContent = `Power: ${playerPower}`;
-    activeMenu.querySelector('#enemy-power').textContent = `Power: ${enemyPower}`;
+    activeMenu.querySelector('#user-power').textContent = `Power: ${formatNumber(playerPower)}`;
+    activeMenu.querySelector('#enemy-power').textContent = `Power: ${formatNumber(enemyPower)}`;
     playSound(Math.max(playerPower, enemyPower) > POWER_LEVEL_MEME_THRESHOLD ? sounds.over9000 : sounds.battle);
 
     showMessage(playerPower >= enemyPower ? winBattle(enemySoldiers) : loseBattle(enemySoldiers));
@@ -420,13 +473,13 @@ function winBattle(enemySoldiers) {
     const soldiersLost = spoils * 100;
     const gloryGained = enemySoldiers / 10;
     applyEffects({ slaves: slavesGained, glory: gloryGained, soldiers: -soldiersLost });
-    return `Hail the victor! You gained ${slavesGained} slaves and ${gloryGained} glory! ${soldiersLost} soldiers were lost in this encounter.`;
+    return `Hail the victor! You gained ${formatNumber(slavesGained)} slaves and ${formatNumber(gloryGained)} glory! ${formatNumber(soldiersLost)} soldiers were lost in this encounter.`;
 }
 
 function loseBattle(enemySoldiers) {
     const soldiersLost = enemySoldiers / 2 + 500;
     applyEffects({ soldiers: -soldiersLost, glory: -BATTLE_LOSS_GLORY, authority: -BATTLE_LOSS_AUTHORITY });
-    return `Death befalls your soldiers! You lost ${soldiersLost} soldiers, ${BATTLE_LOSS_AUTHORITY} authority and ${BATTLE_LOSS_GLORY} glory!`;
+    return `Death befalls your soldiers! You lost ${formatNumber(soldiersLost)} soldiers, ${BATTLE_LOSS_AUTHORITY} authority, and ${BATTLE_LOSS_GLORY} glory!`;
 }
 
 function runAway() {
@@ -440,10 +493,11 @@ function openArmyMenu() {
     if (!canOpenMenu()) return;
 
     const menu = openMenu(`
-        <div id="army">
-            <h2>Spend ${RECRUIT_COST} gold for ${RECRUIT_SOLDIERS} soldiers?</h2>
-            <p id="army-size">Army size: ${player.soldiers}</p>
-            <div id="event-btn-container">
+        <div class="panel" id="army">
+            <h2>Recruit Soldiers</h2>
+            <p class="panel-text">Spend ${RECRUIT_COST} gold for ${RECRUIT_SOLDIERS} soldiers?</p>
+            <p class="panel-text" id="army-size">Army size: ${formatNumber(player.soldiers)}</p>
+            <div class="panel-actions">
                 <button id="build-army" class="option-btn">Recruit</button>
                 <button id="exit-army" class="option-btn">Exit Menu</button>
             </div>
@@ -455,11 +509,11 @@ function openArmyMenu() {
 
 function recruit() {
     if (player.gold < RECRUIT_COST) {
-        showMessage('Not enough funds!');
+        showMessage('You don\'t have enough gold!');
         return;
     }
     applyEffects({ gold: -RECRUIT_COST, soldiers: RECRUIT_SOLDIERS });
-    activeMenu.querySelector('#army-size').textContent = `Army size: ${player.soldiers}`;
+    activeMenu.querySelector('#army-size').textContent = `Army size: ${formatNumber(player.soldiers)}`;
 }
 
 function openWondersMenu() {
@@ -467,18 +521,20 @@ function openWondersMenu() {
 
     const cards = Object.entries(WONDERS).map(([key, wonder]) => `
         <div>
-            <img class="building" data-wonder-image="${key}" src="${wonder.image}" alt="${wonder.name}">
-            <p>${wonder.name}</p>
-            <p>Costs ${wonder.cost.slaves} slaves and ${wonder.cost.gold} gold</p>
-            <p>Generates ${wonder.perTurnText} per turn</p>
+            <img class="building" data-wonder-image="${key}" src="${wonder.image}" alt="">
+            <p class="wonder-name">${wonder.name}</p>
+            <p class="wonder-detail">Costs ${formatNumber(wonder.cost.slaves)} slaves and ${wonder.cost.gold} gold</p>
+            <p class="wonder-detail">Generates ${wonder.perTurnText} per turn</p>
             <button class="option-btn" data-wonder="${key}">Build</button>
         </div>
     `).join('');
     const menu = openMenu(`
-        <div id="wonders">
+        <div class="panel" id="wonders">
             <h2>Build a Wonder!</h2>
             <div id="wonder-container">${cards}</div>
-            <button id="exit-build" class="option-btn">Exit</button>
+            <div class="panel-actions">
+                <button id="exit-build" class="option-btn">Exit</button>
+            </div>
         </div>
     `);
 
@@ -496,7 +552,7 @@ function buildWonder(key) {
         return;
     }
     if (player.slaves < wonder.cost.slaves || player.gold < wonder.cost.gold) {
-        showMessage('You don\'t have enough funds!');
+        showMessage('You can\'t afford this wonder yet!');
         return;
     }
     player.builtWonders.push(key);
@@ -515,6 +571,8 @@ document.querySelectorAll('.diff-btn').forEach(button => {
 elements.endTurnButton.addEventListener('click', advanceTurn);
 elements.saveButton.addEventListener('click', saveGame);
 elements.loadButton.addEventListener('click', loadGame);
+elements.helpButton.addEventListener('click', showHelp);
+elements.helpBackButton.addEventListener('click', hideHelp);
 $('#game-fight').addEventListener('click', openBattle);
 $('#game-build').addEventListener('click', openWondersMenu);
 $('#game-manage').addEventListener('click', openArmyMenu);
