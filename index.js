@@ -53,6 +53,8 @@ let player = null;
 let activeMenu = null;
 let isGameOver = false;
 let typewriter = null;
+let shownStats = null;
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -154,8 +156,42 @@ function applyEffects(effects) {
 
 function renderStats() {
     for (const [stat, element] of Object.entries(elements.stats)) {
-        element.textContent = formatNumber(player[stat]);
+        const change = shownStats && stat !== 'turn' ? player[stat] - shownStats[stat] : 0;
+        element.textContent = stat === 'authority'
+            ? `${player.authority}/${MAX_AUTHORITY}`
+            : formatNumber(player[stat]);
+        if (change !== 0) {
+            floatChange(element, change);
+        }
     }
+    shownStats = Object.fromEntries(Object.keys(elements.stats).map(stat => [stat, player[stat]]));
+}
+
+function floatChange(valueElement, change) {
+    const color = change > 0 ? 'var(--gain)' : 'var(--crimson)';
+    const float = document.createElement('span');
+    float.className = 'stat-change';
+    float.ariaHidden = 'true';
+    float.textContent = `${change > 0 ? '+' : '\u2212'}${formatNumber(Math.abs(change))}`;
+    float.style.color = color;
+    float.style.right = `${valueElement.offsetWidth + 14}px`;
+    valueElement.parentElement.append(float);
+
+    const rise = reducedMotion.matches ? 0 : 1;
+    float.animate(
+        [
+            { opacity: 0, transform: `translateY(${4 * rise}px)` },
+            { opacity: 1, transform: 'translateY(0)', offset: 0.12 },
+            { opacity: 1, transform: `translateY(${-6 * rise}px)`, offset: 0.65 },
+            { opacity: 0, transform: `translateY(${-14 * rise}px)` },
+        ],
+        { duration: 1800, easing: 'ease-out' },
+    ).finished.then(() => float.remove());
+
+    valueElement.animate(
+        [{ color }, { color }, {}],
+        { duration: 1200, easing: 'ease-out' },
+    );
 }
 
 function describeEffects(effects) {
@@ -215,6 +251,7 @@ function showGameScreen() {
         elements.portrait.src = config.portrait;
     }
     setBackground(config.background ?? BASE_BACKGROUND);
+    shownStats = null;
     renderStats();
 }
 

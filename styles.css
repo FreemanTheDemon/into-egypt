@@ -53,6 +53,7 @@ table {
     --amber: #fecc33;
     --clay: #cc3300;
     --crimson: #a50021;
+    --gain: #1e7a3c;
     --palm: #339966;
     --teal: #66cccc;
     --sand: palegoldenrod;
@@ -438,10 +439,6 @@ footer {
     overflow-y: auto;
 }
 
-#help-panel h2 {
-    margin-bottom: 12px;
-}
-
 #help-panel ul {
     list-style: square;
     padding-left: 22px;
@@ -506,8 +503,17 @@ footer {
 }
 
 #char-stats td {
+    position: relative;
     text-align: right;
     font-variant-numeric: lining-nums tabular-nums;
+}
+
+.stat-change {
+    position: absolute;
+    top: 4px;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
 }
 
 #game-actions {
@@ -528,10 +534,18 @@ footer {
 
 /* Menus */
 
+/* A Nile-blue lintel across the top of the panel, set off from the body by the frieze. */
 .panel h2 {
-    font-size: 28px;
+    margin: -24px -28px 22px;
+    padding: 14px 20px calc(12px + var(--frieze-height));
+    font-size: 24px;
+    line-height: 1.2;
     text-align: center;
-    margin-bottom: 16px;
+    color: var(--amber);
+    text-shadow: 2px 2px var(--ink);
+    background:
+        var(--frieze) bottom / 100% var(--frieze-height) no-repeat,
+        var(--nile);
 }
 
 .panel-text {
