@@ -66,6 +66,9 @@ table {
     --stage-height: 576px;
     --message-height: 128px;
     --frieze-height: 12px;
+    --font-body: Georgia, "Times New Roman", serif;
+    --font-display: "Times New Roman", Times, serif;
+    --caps-tracking: 0.12em;
     /* A painted tomb-wall border: colored blocks between dark rules. */
     --frieze:
         linear-gradient(var(--ink) 0 2px, transparent 2px calc(100% - 2px), var(--ink) calc(100% - 2px)),
@@ -82,7 +85,7 @@ table {
 
 body {
     min-height: 100vh;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--font-body);
     display: flex;
     flex-direction: column;
     background-color: var(--sand);
@@ -108,7 +111,7 @@ button:active {
 }
 
 .gold-title {
-    font-family: "Times New Roman", Times, serif;
+    font-family: var(--font-display);
     color: var(--gold);
     letter-spacing: 0.5em;
     text-transform: uppercase;
@@ -178,6 +181,17 @@ footer {
 
 #made-by {
     color: var(--goldenrod);
+}
+
+/* Inscription capitals for headings and key buttons, echoing the title. */
+.panel h2,
+.big-btn,
+.diff-btn {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: var(--caps-tracking);
+    /* Balances the trailing letter-spacing so the text stays centered. */
+    text-indent: var(--caps-tracking);
 }
 
 /* Game window */
@@ -309,7 +323,7 @@ footer {
 
 .big-btn {
     height: 42px;
-    font-size: 20px;
+    font-size: 18px;
     color: var(--amber);
     background-color: var(--nile);
     border: 2px solid var(--burlywood);
@@ -372,16 +386,20 @@ footer {
 
 .diff-btn {
     padding: 10px 6px;
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
     border: 2px solid var(--silver);
 }
 
 .diff-btn small {
     display: block;
     margin-top: 4px;
+    font-family: var(--font-body);
     font-size: 13px;
     font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    text-indent: 0;
 }
 
 #easy-btn {
@@ -511,7 +529,7 @@ footer {
 /* Menus */
 
 .panel h2 {
-    font-size: 32px;
+    font-size: 28px;
     text-align: center;
     margin-bottom: 16px;
 }
