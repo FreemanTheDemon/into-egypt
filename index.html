@@ -18,7 +18,6 @@
 
       <a href="./index.html">
         <h1>
-          <!-- make this a link to the home page -->
           I N T O&nbsp; ☥ &nbsp;E G Y P T
         </h1>
       </a>
@@ -36,9 +35,9 @@
 
       <div id="game-start">
         <input id="insert-name" type="text" placeholder="Name Your Pharaoh">
-        <button class="diff-btn" id="easy-btn">Easy - Pharaoh of Abraham</button>
-        <button class="diff-btn" id="medium-btn">Medium - Pharaoh of Joseph</button>
-        <button class="diff-btn" id="hard-btn">Hard - Pharaoh of Moses</button>
+        <button class="diff-btn" id="easy-btn" data-difficulty="easy">Easy - Pharaoh of Abraham</button>
+        <button class="diff-btn" id="medium-btn" data-difficulty="medium">Medium - Pharaoh of Joseph</button>
+        <button class="diff-btn" id="hard-btn" data-difficulty="hard">Hard - Pharaoh of Moses</button>
       </div>
       <div id="game-info">
         <img id="char-picture" src="./resources/char_pic.png" alt="character portrait">
@@ -70,7 +69,6 @@
           </tr>
         </table>
 
-        <!-- put some buttons here to manage things during each year -->
         <div id="game-actions">
           <button class="minor-btn" id="game-fight">
             Fight Neighbors
@@ -113,7 +111,7 @@
     <p id="made-by">Made by: Freeman</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios@0.24.0/dist/axios.min.js"></script>
+  <script src="./data.js"></script>
   <script src="./index.js"></script>
 </body>
 
